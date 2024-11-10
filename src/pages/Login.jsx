@@ -7,11 +7,12 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Bounce, toast, ToastContainer } from 'react-toastify'
 import { Link } from 'react-router-dom'
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import ErrorIcon from '@mui/icons-material/Error';
 import { useNavigate } from 'react-router-dom'
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import { getDatabase, ref, set } from "firebase/database";
 
 //design
 const BootstrapButton = styled(Button)({
@@ -37,6 +38,9 @@ const BootstrapButton = styled(Button)({
 const Login = () => {
   let navigate = useNavigate()
   const auth = getAuth();
+  const provider = new GoogleAuthProvider();
+  const db = getDatabase();
+
   let [email, setEmail] = useState("")
   let [password, setPassword] = useState("")
   let [emailerr, setEmailerr] = useState("")
@@ -76,7 +80,7 @@ const Login = () => {
             console.log(user)
             setEmail("");
             setPassword("");
-            navigate('/home')
+            navigate('/')
           }, 2000)
         })
         .catch((error) => {
@@ -87,6 +91,29 @@ const Login = () => {
           }
         });
     }
+  }
+
+  // login with google
+  let handleGoogle = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        set(ref(db, 'users/' + result.user.uid), {
+          name: result.user.displayName,
+          email: result.user.email,
+          image: result.user.photoURL
+        }).then(() => {
+          navigate("/")
+        })
+      }).catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
   }
 
   return (
@@ -109,7 +136,7 @@ const Login = () => {
           <div className=' h-[100vh] flex items-center justify-end '>
             <div className=' mr-[70px] '>
               <h1 className=' text-[35px] font-bold text-[#03014C] mb-[30px] '>Login to your account!</h1>
-              <button className=' flex items-center justify-center gap-[10px] w-[220px] h-[62px] border-solid border-[2px] border-[#03014C]/50 rounded-[10px] text-[16px] font-semibold text-[#03014C] '><img src={LoginIcon} alt="login" /> Login with Google</button>
+              <button onClick={handleGoogle} className=' flex items-center justify-center gap-[10px] w-[220px] h-[62px] border-solid border-[2px] border-[#03014C]/50 rounded-[10px] text-[16px] font-semibold text-[#03014C] '><img src={LoginIcon} alt="login" /> Login with Google</button>
               <div className=' mt-[40px] '>
                 <TextField onChange={handleEmail} className=' w-[375px] ' id="standard-basic" label="Email Address" variant="standard" type="email" />
               </div>

@@ -11,6 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
 import { useNavigate } from 'react-router-dom'
 import ErrorIcon from '@mui/icons-material/Error';
+import { getDatabase, ref, set } from "firebase/database";
 
 //design
 const TextField2 = styled(TextField)({
@@ -58,6 +59,7 @@ const BootstrapButton = styled(Button)({
 
 const Registration = () => {
   const auth = getAuth();
+  const db = getDatabase();
 
   //state
   let navigate = useNavigate()
@@ -106,14 +108,20 @@ const Registration = () => {
                   theme: "colored",
                   transition: Bounce,
                 });
-                setTimeout(() => {
-                  const user = userCredential.user;
-                  console.log(user)
-                  setEmail("");
-                  setName("");
-                  setPassword("");
-                  navigate('/')
-                }, 2000)
+                const user = userCredential.user;
+                console.log(user)
+                set(ref(db, 'users/' + user.uid), {
+                  name: user.displayName,
+                  email: user.email,
+                  image: "https://www.alaska.edu/_resources/images/placeholders/profile.png"
+                }).then(() => {
+                  setTimeout(() => {
+                    setEmail("");
+                    setName("");
+                    setPassword("");
+                    navigate('/login')
+                  }, 2000)
+                })
               });
           }).catch((error) => {
             console.log(error)
