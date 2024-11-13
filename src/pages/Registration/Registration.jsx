@@ -1,4 +1,5 @@
-import { Button, Grid, TextField } from '@mui/material'
+import { Grid, TextField } from '@mui/material'
+import { Button } from "@material-tailwind/react";
 import "./registration.css"
 import React, { useState } from 'react'
 import RegistrationImage from "../../assets/images/registration.jpg"
@@ -36,24 +37,6 @@ const TextField2 = styled(TextField)({
   },
   "& .MuiOutlinedInput-input": {
     padding: "16px"
-  },
-});
-const BootstrapButton = styled(Button)({
-  boxShadow: 'none',
-  textTransform: 'none !important',
-  fontSize: '17px !important',
-  padding: '16px 12px !important',
-  width: '375px',
-  marginTop: '50px !important',
-  borderRadius: '50px !important',
-  border: '1px solid',
-  lineHeight: 1.5,
-  backgroundColor: '#5f35f5 !important',
-  borderColor: '#5f35f5 !important',
-  '&:hover': {
-    backgroundColor: '#5f35f5',
-    borderColor: '#5f35f5',
-    boxShadow: '0 0 0 0.2rem rgba(95, 53, 245, .5) !important',
   },
 });
 
@@ -181,8 +164,8 @@ const Registration = () => {
                 <p className='text-red-600 mt-1 flex items-start gap-1'><ErrorIcon fontSize='small' />{passworderr}</p>
               }
               {email && name && password ?
-                (<BootstrapButton onClick={handleRegistration} variant="contained" disableRipple>Sign Up</BootstrapButton>) :
-                (<BootstrapButton onClick={handleRegistration} disabled variant="contained" disableRipple>Sign Up</BootstrapButton>)
+                (<Button className='text-white text-[20px] font-normal w-[375px] mt-[50px] rounded-[50px] bg-[#4E1CFF] normal-case py-[16px] ' onClick={handleRegistration} >Sign Up</Button>) :
+                (<Button className='text-white text-[20px] font-normal w-[375px] mt-[50px] rounded-[50px] bg-[#4E1CFF] normal-case py-[16px] ' disabled onClick={handleRegistration} >Sign Up</Button>)
               }
               <div className=' flex items-center gap-[8px] mt-[35px] '>
                 <p className='text-[16px] font-medium text-[#03014C]'>Already have an account?</p>

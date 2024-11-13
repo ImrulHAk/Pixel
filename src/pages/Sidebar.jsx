@@ -50,7 +50,7 @@ const Sidebar = () => {
       </div>
       <div className=' mt-28 relative '>
         <div className={`w-[160px] h-[88px] ${location.pathname == "/logout" && "bg-white"} ml-auto rounded-l-[20px] `}></div>
-        <Link to="/logout">
+        <Link to="/login">
           <RiLoginBoxLine className={`m-auto text-[50px] ${location.pathname == "/logout" ? "text-primary" : "text-[#BAD1FF]"} absolute top-2/4 left-2/4 translate-x-[-50%] translate-y-[-50%] `} />
         </Link>
         <div className=' w-[10px] h-[88px] absolute top-0 right-0 rounded-l-[20px] bg-primary '></div>

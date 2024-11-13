@@ -1,4 +1,5 @@
-import { Button, Grid, TextField } from '@mui/material'
+import { Grid, TextField } from '@mui/material'
+import { Button } from "@material-tailwind/react";
 import React, { useState } from 'react'
 import LoginImage from "../../src/assets/images/login.jpg"
 import LoginIcon from "../../src/assets/images/loginicon.png"
@@ -13,26 +14,6 @@ import { useNavigate } from 'react-router-dom'
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { getDatabase, ref, set } from "firebase/database";
-
-//design
-const BootstrapButton = styled(Button)({
-  boxShadow: 'none',
-  textTransform: 'none !important',
-  fontSize: '17px !important',
-  padding: '16px 12px !important',
-  width: '375px',
-  marginTop: '50px !important',
-  borderRadius: '10px !important',
-  border: '1px solid',
-  lineHeight: 1.5,
-  backgroundColor: '#5f35f5 !important',
-  borderColor: '#5f35f5 !important',
-  '&:hover': {
-    backgroundColor: '#5f35f5',
-    borderColor: '#5f35f5',
-    boxShadow: '0 0 0 0.2rem rgba(95, 53, 245, .5) !important',
-  },
-});
 
 
 const Login = () => {
@@ -150,13 +131,13 @@ const Login = () => {
               </div>
               <div className=' flex justify-between items-center mt-3 '>
                 <FormControlLabel control={<Checkbox />} label="Remember me" />
-                <a className=' font-semibold text-[16px] text-[#03014C] ' href="#">Forgot password?</a>
+                <Link to="/forgetpassword" className=' font-semibold text-[16px] text-[#03014C] ' href="#">Forgot password?</Link>
               </div>
               {error &&
                 <p className='text-red-600 mt-1 flex items-center gap-1'><ErrorIcon fontSize='small' />{error}</p>
               }
-              {email && password ? (<BootstrapButton onClick={handleLogin} variant="contained" disableRipple>Login to Continue</BootstrapButton>) :
-                (<BootstrapButton onClick={handleLogin} disabled variant="contained" disableRipple>Login to Continue</BootstrapButton>)}
+              {email && password ? (<Button className='text-white text-[20px] font-normal w-[375px] mt-[40px] rounded-[10px] bg-[#4E1CFF] normal-case py-[16px]' onClick={handleLogin} >Login to Continue</Button>) :
+                (<Button className='text-white text-[20px] font-normal w-[375px] mt-[40px] rounded-[10px] bg-[#4E1CFF] normal-case py-[16px]' disabled onClick={handleLogin} >Login to Continue</Button>)}
 
               <div className=' flex items-center gap-[8px] mt-[30px]'>
                 <p className=' text-[16px] font-medium text-[#03014C] '>Don't have an account?</p>

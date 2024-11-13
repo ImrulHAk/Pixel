@@ -13,6 +13,7 @@ import Message from './pages/Message';
 import Notification from './pages/Notification';
 import Setting from './pages/Setting';
 import Logout from './pages/Logout';
+import ForgetPassword from './pages/ForgetPassword';
 
 
 const router = createBrowserRouter(
@@ -20,6 +21,7 @@ const router = createBrowserRouter(
     <>
       <Route path="/registration" element={<Registration />}>Sign in</Route>
       <Route path="/login" element={<Login />}>Sign up</Route>
+      <Route path="/forgetpassword" element={<ForgetPassword />}>Forgot password?</Route>
       <Route path="/" element={<Rootlayout />}>
         <Route index element={<Home />}></Route>
         <Route path='/message' element={<Message />}></Route>
