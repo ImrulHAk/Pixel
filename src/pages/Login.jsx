@@ -14,9 +14,12 @@ import { useNavigate } from 'react-router-dom'
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { getDatabase, ref, set } from "firebase/database";
+import { userLoginInfo } from '../slices/userSlice';
+import { useDispatch } from 'react-redux';
 
 
 const Login = () => {
+  let dispatch = useDispatch()
   let navigate = useNavigate()
   const auth = getAuth();
   const provider = new GoogleAuthProvider();
@@ -61,7 +64,8 @@ const Login = () => {
             console.log(user)
             setEmail("");
             setPassword("");
-            navigate('/')
+            dispatch(userLoginInfo(user));
+            navigate('/');
           }, 2000)
         })
         .catch((error) => {

@@ -6,20 +6,22 @@ import { IoIosNotifications } from "react-icons/io";
 import { IoSettingsSharp } from "react-icons/io5";
 import { RiLoginBoxLine } from "react-icons/ri";
 import { Link, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const Sidebar = () => {
+  let data = useSelector((state) => state.user.value)
   let location = useLocation()
   console.log(location.pathname)
   return (
     <section className=' w-[185px] h-[955px] bg-primary m-[35px] rounded-[20px] text-center '>
       <div className='pt-[38px]'></div>
       <div className=' group w-[100px] h-[100px] rounded-full overflow-hidden mx-auto relative '>
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqafzhnwwYzuOTjTlaYMeQ7hxQLy_Wq8dnQg&s" alt="profile" />
+        <img src={data ? data.photoURL : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqafzhnwwYzuOTjTlaYMeQ7hxQLy_Wq8dnQg&s"} alt="profile" />
         <div className=' hidden w-full h-full bg-[rgba(0,0,0,.5)] absolute top-0 left-0 group-hover:flex justify-center items-center '>
           <TbCloudUpload className='text-white text-[25px] ' />
         </div>
       </div>
-      <h2 className=' text-white mt-4 font-semibold text-[16px] '>Profile Name</h2>
+      <h2 className=' text-white mt-4 font-semibold text-[16px] '>{data.displayName}</h2>
       <div className=' mt-16 relative '>
         <div className={`w-[160px] h-[88px] ${location.pathname == "/" && "bg-white"} ml-auto rounded-l-[20px] `}></div>
         <Link to="/">
