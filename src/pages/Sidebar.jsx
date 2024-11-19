@@ -5,13 +5,28 @@ import { SiGooglemessages } from "react-icons/si";
 import { IoIosNotifications } from "react-icons/io";
 import { IoSettingsSharp } from "react-icons/io5";
 import { RiLoginBoxLine } from "react-icons/ri";
-import { Link, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { getAuth, signOut } from "firebase/auth";
+import { userLoginInfo } from '../slices/userSlice';
 
 const Sidebar = () => {
+  const auth = getAuth();
+  let dispatch = useDispatch();
+  let navigate = useNavigate();
   let data = useSelector((state) => state.user.value)
   let location = useLocation()
   console.log(location.pathname)
+
+  let handleLogout = () => {
+    signOut(auth).then(() => {
+      dispatch(userLoginInfo(null))
+      localStorage.setItem("userInfo", null)
+      navigate("/login")
+    }).catch((error) => {
+      console.log(error)
+    });
+  }
   return (
     <section className=' w-[185px] h-[955px] bg-primary m-[35px] rounded-[20px] text-center '>
       <div className='pt-[38px]'></div>
@@ -21,7 +36,7 @@ const Sidebar = () => {
           <TbCloudUpload className='text-white text-[25px] ' />
         </div>
       </div>
-      <h2 className=' text-white mt-4 font-semibold text-[16px] '>{data.displayName}</h2>
+      <h2 className=' text-white mt-4 font-semibold text-[16px] '>{data && data.displayName}</h2>
       <div className=' mt-16 relative '>
         <div className={`w-[160px] h-[88px] ${location.pathname == "/" && "bg-white"} ml-auto rounded-l-[20px] `}></div>
         <Link to="/">
@@ -52,9 +67,7 @@ const Sidebar = () => {
       </div>
       <div className=' mt-28 relative '>
         <div className={`w-[160px] h-[88px] ${location.pathname == "/logout" && "bg-white"} ml-auto rounded-l-[20px] `}></div>
-        <Link to="/login">
-          <RiLoginBoxLine className={`m-auto text-[50px] ${location.pathname == "/logout" ? "text-primary" : "text-[#BAD1FF]"} absolute top-2/4 left-2/4 translate-x-[-50%] translate-y-[-50%] `} />
-        </Link>
+        <RiLoginBoxLine onClick={handleLogout} className={`m-auto text-[50px] ${location.pathname == "/logout" ? "text-primary" : "text-[#BAD1FF]"} absolute top-2/4 left-2/4 translate-x-[-50%] translate-y-[-50%] `} />
         <div className=' w-[10px] h-[88px] absolute top-0 right-0 rounded-l-[20px] bg-primary '></div>
       </div>
     </section>

@@ -11,17 +11,22 @@ import {
 } from "@material-tailwind/react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { getDatabase, ref, onValue } from "firebase/database";
+import { useSelector, useDispatch } from 'react-redux';
+import { userLoginInfo } from '../../slices/userSlice';
 
 const Userlist = () => {
     let [userList, setUserlist] = useState([])
     const db = getDatabase();
+    let data = useSelector((state) => state.user.value)
 
     useEffect(() => {
         const userListRef = ref(db, 'users/');
         onValue(userListRef, (snapshot) => {
             let array = []
             snapshot.forEach((item) => {
-                array.push(item.val())
+                if (data.uid != item.key) {
+                    array.push(item.val())
+                }
             })
             setUserlist(array)
         });
@@ -58,7 +63,7 @@ const Userlist = () => {
                                                 {item.name}
                                             </Typography>
                                         </div>
-                                        <Typography color="blue-gray" className='font-medium text-[10px] text-[#000000]/50'>{item.email}</Typography>
+                                        <Typography color="blue-gray" className='font-medium text-[10px] text-[#000000]/50'>{item.email.slice(0, 12)}...</Typography>
                                     </div>
                                     <IconButton className='w-20 h-20 bg-[#03014C] text-[20px]' size="sm">+</IconButton>
                                 </CardHeader>

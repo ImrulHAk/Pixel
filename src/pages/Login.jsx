@@ -65,6 +65,7 @@ const Login = () => {
             setEmail("");
             setPassword("");
             dispatch(userLoginInfo(user));
+            localStorage.setItem("userInfo", JSON.stringify(user))
             navigate('/');
           }, 2000)
         })
@@ -133,13 +134,13 @@ const Login = () => {
                   <VisibilityIcon onClick={() => setPasswordshow(!passwordshow)} className=" text-[#000000]/50 absolute top-4 right-5" />
                 }
               </div>
+              {error &&
+                <p className='text-red-600 mt-1 flex items-center gap-1'><ErrorIcon fontSize='small' />{error}</p>
+              }
               <div className=' flex justify-between items-center mt-3 '>
                 <FormControlLabel control={<Checkbox />} label="Remember me" />
                 <Link to="/forgetpassword" className=' font-semibold text-[16px] text-[#03014C] ' href="#">Forgot password?</Link>
               </div>
-              {error &&
-                <p className='text-red-600 mt-1 flex items-center gap-1'><ErrorIcon fontSize='small' />{error}</p>
-              }
               {email && password ? (<Button className='text-white text-[20px] font-normal w-[375px] mt-[40px] rounded-[10px] bg-[#4E1CFF] normal-case py-[16px]' onClick={handleLogin} >Login to Continue</Button>) :
                 (<Button className='text-white text-[20px] font-normal w-[375px] mt-[40px] rounded-[10px] bg-[#4E1CFF] normal-case py-[16px]' disabled onClick={handleLogin} >Login to Continue</Button>)}
 
