@@ -88,7 +88,7 @@ const Registration = () => {
                   pauseOnHover: true,
                   draggable: true,
                   progress: undefined,
-                  theme: "colored",
+                  theme: "light",
                   transition: Bounce,
                 });
                 const user = userCredential.user;

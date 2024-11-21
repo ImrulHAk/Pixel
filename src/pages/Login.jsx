@@ -17,7 +17,6 @@ import { getDatabase, ref, set } from "firebase/database";
 import { userLoginInfo } from '../slices/userSlice';
 import { useDispatch } from 'react-redux';
 
-
 const Login = () => {
   let dispatch = useDispatch()
   let navigate = useNavigate()
@@ -40,6 +39,7 @@ const Login = () => {
     setPassword(e.target.value)
     setError("")
   }
+
   let handleLogin = () => {
     if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
       setEmailerr("Invalid email")
@@ -48,6 +48,20 @@ const Login = () => {
         .then((userCredential) => {
           // Signed in 
           const user = userCredential.user;
+          if (!user.emailVerified) {
+            toast.error('Please verify your email', {
+              position: "top-center",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              transition: Bounce,
+            });
+            return; // Prevent further actions if the email is not verified
+          }
           toast.success('Successfully Login', {
             position: "top-center",
             autoClose: 3000,
@@ -56,7 +70,7 @@ const Login = () => {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: "colored",
+            theme: "light",
             transition: Bounce,
           });
           setTimeout(() => {
