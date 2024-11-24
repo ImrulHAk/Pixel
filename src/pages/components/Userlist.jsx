@@ -10,7 +10,7 @@ import {
     IconButton,
 } from "@material-tailwind/react";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { getDatabase, ref, onValue, set, push } from "firebase/database";
+import { getDatabase, ref, onValue, set, push, remove } from "firebase/database";
 import { useSelector, useDispatch } from 'react-redux';
 import { userLoginInfo } from '../../slices/userSlice';
 
@@ -38,11 +38,11 @@ const Userlist = () => {
         set(push(ref(db, 'friendrequest/')), {
             senderid: data.uid,
             sendername: data.displayName,
-            senderemail:data.email,
+            senderemail: data.email,
             senderphoto: data.photoURL,
             reciverid: item.id,
             recivername: item.name,
-            reciveremail: item.email ,
+            reciveremail: item.email,
             reciverphoto: item.image,
         }).then(() => {
             setSentrequest(item.id)
@@ -84,6 +84,7 @@ const Userlist = () => {
                                     </div>
                                     {sentRequest.includes(item.id) ? (
                                         <IconButton
+                                            disabled
                                             className="w-20 h-20 bg-[#03014C] text-[20px] rounded-[4px] mr-2"
                                             size="sm"
                                         >

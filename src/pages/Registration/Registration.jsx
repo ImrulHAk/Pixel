@@ -88,7 +88,7 @@ const Registration = () => {
                   pauseOnHover: true,
                   draggable: true,
                   progress: undefined,
-                  theme: "light",
+                  theme: "dark",
                   transition: Bounce,
                 });
                 const user = userCredential.user;
@@ -136,7 +136,7 @@ const Registration = () => {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="colored"
+        theme="dark"
         transition={Bounce}
       />
       <Grid container>

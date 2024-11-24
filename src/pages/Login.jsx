@@ -57,7 +57,7 @@ const Login = () => {
               pauseOnHover: true,
               draggable: true,
               progress: undefined,
-              theme: "light",
+              theme: "dark",
               transition: Bounce,
             });
             return; // Prevent further actions if the email is not verified
@@ -70,7 +70,7 @@ const Login = () => {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: "light",
+            theme: "dark",
             transition: Bounce,
           });
           setTimeout(() => {
@@ -128,7 +128,7 @@ const Login = () => {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="colored"
+        theme="dark"
         transition={Bounce}
       />
       <Grid container spacing={2}>
