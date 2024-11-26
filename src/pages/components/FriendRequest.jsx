@@ -10,7 +10,7 @@ import {
   IconButton,
 } from "@material-tailwind/react";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { getDatabase, ref, onValue, set, push } from "firebase/database";
+import { getDatabase, ref, onValue, set, push, remove } from "firebase/database";
 import { useSelector, useDispatch } from 'react-redux';
 
 const FriendRequest = () => {
@@ -29,7 +29,15 @@ const FriendRequest = () => {
       })
       setFriendrequestlist(array);
     });
-  }, [])
+  }, []);
+
+  let handleFriend = (item) => {
+    set(push(ref(db, 'friend/')), {
+      ...item,
+  }).then(() => {
+      remove(ref(db, 'friendrequest/' + item.id))
+  });
+  }
 
   return (
     <div>
@@ -62,9 +70,12 @@ const FriendRequest = () => {
                         {item.sendername}
                       </Typography>
                     </div>
-                    <Typography color="blue-gray" className='font-medium text-[10px] text-[#000000]/50%'>{item.senderemail}</Typography>
+                    <Typography color="blue-gray" className='font-medium text-[10px] text-[#000000]/50%'>{item.senderemail.slice(0, 12)}...</Typography>
                   </div>
-                  <Button className=' w-28 bg-[#03014C] rounded-[5px] mr-1 capitalize font-normal text-sm' size="sm">accept</Button>
+                  <Button
+                    onClick={() => handleFriend(item)}
+                    className=' w-28 bg-[#03014C] rounded-[5px] mr-1 capitalize font-normal text-sm'
+                    size="sm">accept</Button>
                 </CardHeader>
               </Card>
             ))}

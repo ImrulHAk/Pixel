@@ -16,6 +16,9 @@ import { userLoginInfo } from '../../slices/userSlice';
 
 const Userlist = () => {
     let [userList, setUserlist] = useState([])
+    let [friendrequestList, setFriendrequestlist] = useState([])
+    let [friendList, setFriendlist] = useState([])
+    let [cancelrequestList, setCancelrequestlist] = useState([])
     const db = getDatabase();
     let data = useSelector((state) => state.user.value)
     let [sentRequest, setSentrequest] = useState([])
@@ -31,10 +34,31 @@ const Userlist = () => {
             })
             setUserlist(array)
         });
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        const userListRef = ref(db, 'friendrequest/');
+        onValue(userListRef, (snapshot) => {
+            let array = []
+            snapshot.forEach((item) => {
+                array.push(item.val().senderid + item.val().reciverid)
+            })
+            setFriendrequestlist(array)
+        });
+    }, []);
+
+    useEffect(() => {
+        const userListRef = ref(db, 'friend/');
+        onValue(userListRef, (snapshot) => {
+            let array = []
+            snapshot.forEach((item) => {
+                array.push(item.val().senderid + item.val().reciverid)
+            })
+            setFriendlist(array)
+        });
+    }, []);
 
     let handleFriendrequest = (item) => {
-        console.log(item)
         set(push(ref(db, 'friendrequest/')), {
             senderid: data.uid,
             sendername: data.displayName,
@@ -46,7 +70,11 @@ const Userlist = () => {
             reciverphoto: item.image,
         }).then(() => {
             setSentrequest(item.id)
-        })
+        });
+    }
+
+    let handleCancelrequest = (item) => {
+
     }
 
     return (
@@ -59,7 +87,7 @@ const Userlist = () => {
                         </Typography>
                         <BsThreeDotsVertical />
                     </div>
-                    <div className="h-[350px] overflow-y-scroll mt-[20px]">
+                    <div className="h-[350px] overflow-y-scroll mt-[20px] ">
                         {userList.map((item) => (
                             <Card color="transparent" shadow={true} className="w-full h-[70px]">
                                 <CardHeader
@@ -82,23 +110,32 @@ const Userlist = () => {
                                         </div>
                                         <Typography color="blue-gray" className='font-medium text-[10px] text-[#000000]/50'>{item.email.slice(0, 12)}...</Typography>
                                     </div>
-                                    {sentRequest.includes(item.id) ? (
+                                    {friendList.includes(data.uid + item.id) || friendList.includes(item.id + data.uid) ? (
                                         <IconButton
                                             disabled
                                             className="w-20 h-20 bg-[#03014C] text-[20px] rounded-[4px] mr-2"
                                             size="sm"
                                         >
-                                            ✓
+                                            ✔
                                         </IconButton>
-                                    ) : (
-                                        <IconButton
-                                            onClick={() => handleFriendrequest(item)}
-                                            className="w-20 h-20 bg-[#03014C] text-[20px] rounded-[4px] mr-2"
-                                            size="sm"
-                                        >
-                                            +
-                                        </IconButton>
-                                    )}
+                                    ) :
+                                        friendrequestList.includes(data.uid + item.id) || friendrequestList.includes(item.id + data.uid) ? (
+                                            <IconButton
+                                                onClick={() => handleCancelrequest(item)}
+                                                className="w-20 h-20 bg-[#03014C] text-[20px] rounded-[4px] mr-2"
+                                                size="sm"
+                                            >
+                                                -
+                                            </IconButton>
+                                        ) : (
+                                            <IconButton
+                                                onClick={() => handleFriendrequest(item)}
+                                                className="w-20 h-20 bg-[#03014C] text-[20px] rounded-[4px] mr-2"
+                                                size="sm"
+                                            >
+                                                +
+                                            </IconButton>
+                                        )}
                                 </CardHeader>
                             </Card>
                         ))}

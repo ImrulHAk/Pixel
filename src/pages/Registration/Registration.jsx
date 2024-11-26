@@ -66,6 +66,7 @@ const Registration = () => {
     setPassword(e.target.value)
     setPassworderr("")
   }
+  
   let handleRegistration = () => {
     if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
       setEmailerr("Invalid email")
