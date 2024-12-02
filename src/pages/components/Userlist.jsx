@@ -58,6 +58,19 @@ const Userlist = () => {
         });
     }, []);
 
+    useEffect(() => {
+        const blocklistRef = ref(db, 'blocklist/');
+        onValue(blocklistRef, (snapshot) => {
+            let blockedUsers = [];
+            snapshot.forEach((item) => {
+                if (data.uid == item.val().blockbyid || data.uid == item.val().blockid) {
+                    blockedUsers.push(item.val().blockid == data.uid ? item.val().blockbyid : item.val().blockid);
+                }
+            });
+            setUserlist((prevUserList) => prevUserList.filter((user) => !blockedUsers.includes(user.id)));
+        });
+    }, []);
+
     let handleFriendrequest = (item) => {
         set(push(ref(db, 'friendrequest/')), {
             senderid: data.uid,
@@ -74,12 +87,14 @@ const Userlist = () => {
     }
 
     let handleCancelrequest = (item) => {
-
+        setCancelrequestlist(item.id)
+        remove(ref(db, 'friendrequest/' + item.id))
+        console.log("clicl", item)
     }
 
     return (
         <div>
-            <Card className="mt-6 w-[345px] h-[450px] ">
+            <Card className="mt-6 w-[345px] h-[450px] border border-gray-300 ">
                 <CardBody>
                     <div className=' flex justify-between items-center '>
                         <Typography variant="h5" color="blue-gray">
@@ -88,57 +103,42 @@ const Userlist = () => {
                         <BsThreeDotsVertical />
                     </div>
                     <div className="h-[350px] overflow-y-scroll mt-[20px] ">
-                        {userList.map((item) => (
-                            <Card color="transparent" shadow={true} className="w-full h-[70px]">
-                                <CardHeader
-                                    color="transparent"
-                                    floated={false}
-                                    shadow={false}
-                                    className="flex items-center gap-4 pb-4"
-                                >
-                                    <Avatar
-                                        size="sm"
-                                        variant="circular"
-                                        src={item.image}
-                                        alt=" "
-                                    />
-                                    <div className="flex w-full flex-col gap-0.5">
-                                        <div className="flex items-center justify-between">
-                                            <Typography variant="h5" color="blue-gray" className='font-semibold text-[14px]'>
-                                                {item.name}
-                                            </Typography>
-                                        </div>
-                                        <Typography color="blue-gray" className='font-medium text-[10px] text-[#000000]/50'>{item.email.slice(0, 12)}...</Typography>
-                                    </div>
-                                    {friendList.includes(data.uid + item.id) || friendList.includes(item.id + data.uid) ? (
-                                        <IconButton
-                                            disabled
-                                            className="w-20 h-20 bg-[#03014C] text-[20px] rounded-[4px] mr-2"
+                        {userList.length > 0 ?
+                            userList.map((item) => (
+                                <Card color="transparent" shadow={true} className="w-full h-[70px]">
+                                    <CardHeader
+                                        color="transparent"
+                                        floated={false}
+                                        shadow={false}
+                                        className="flex items-center gap-4 pb-4"
+                                    >
+                                        <Avatar
                                             size="sm"
-                                        >
-                                            ✔
-                                        </IconButton>
-                                    ) :
-                                        friendrequestList.includes(data.uid + item.id) || friendrequestList.includes(item.id + data.uid) ? (
-                                            <IconButton
-                                                onClick={() => handleCancelrequest(item)}
-                                                className="w-20 h-20 bg-[#03014C] text-[20px] rounded-[4px] mr-2"
-                                                size="sm"
-                                            >
-                                                -
-                                            </IconButton>
-                                        ) : (
-                                            <IconButton
-                                                onClick={() => handleFriendrequest(item)}
-                                                className="w-20 h-20 bg-[#03014C] text-[20px] rounded-[4px] mr-2"
-                                                size="sm"
-                                            >
-                                                +
-                                            </IconButton>
-                                        )}
-                                </CardHeader>
-                            </Card>
-                        ))}
+                                            variant="circular"
+                                            src={item.image}
+                                        />
+                                        <div className="flex w-full flex-col gap-0.5">
+                                            <div className="flex items-center justify-between">
+                                                <Typography variant="h5" color="blue-gray" className='font-semibold text-[14px]'>
+                                                    {item.name}
+                                                </Typography>
+                                            </div>
+                                            <Typography color="blue-gray" className='font-medium text-[10px] text-[#000000]/50'>{item.email.slice(0, 12)}...</Typography>
+                                        </div>
+                                        {friendList.includes(data.uid + item.id) || friendList.includes(item.id + data.uid) ? (
+                                            <button className=' w-12 h-[30px] bg-[#03014C]/60 rounded-md text-white mr-2 '>✔</button>
+                                        ) : friendrequestList.includes(data.uid + item.id) || friendrequestList.includes(item.id + data.uid) ? (
+                                            <button onClick={() => handleCancelrequest(item)} className=' w-12 bg-[#03014C] rounded-md text-white font-bold text-[20px] mr-2 '>-</button>
+                                        ) : cancelrequestList.includes(data.uid + item.id) || cancelrequestList.includes(item.id == data.uid) ? (
+                                            <button onClick={() => handleFriendrequest(item)} className=' w-12 bg-[#03014C]  rounded-md text-white font-bold text-[20px] mr-2 '>+</button>
+                                        ) :
+                                            <button onClick={() => handleFriendrequest(item)} className=' w-12 bg-[#03014C]  rounded-md text-white font-bold text-[20px] mr-2 '>+</button>
+                                        }
+                                    </CardHeader>
+                                </Card>
+                            )) :
+                            <p>User not found</p>
+                        }
                     </div>
                 </CardBody>
             </Card>

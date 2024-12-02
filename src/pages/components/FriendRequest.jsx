@@ -34,14 +34,18 @@ const FriendRequest = () => {
   let handleFriend = (item) => {
     set(push(ref(db, 'friend/')), {
       ...item,
-  }).then(() => {
+    }).then(() => {
       remove(ref(db, 'friendrequest/' + item.id))
-  });
+    });
+  }
+
+  let handleDelete=(item)=>{
+    remove(ref(db, 'friendrequest/' + item.id))
   }
 
   return (
     <div>
-      <Card className="mt-6 w-[427px] h-[450px] ">
+      <Card className="mt-6 w-[427px] h-[450px] border border-gray-300 ">
         <CardBody>
           <div className='flex justify-between items-center '>
             <Typography variant="h5" color="blue-gray" className="mb-2">
@@ -50,7 +54,8 @@ const FriendRequest = () => {
             <BsThreeDotsVertical />
           </div>
           <div className="h-[350px] overflow-y-scroll mt-[20px]">
-            {friendrequestlist.map((item) => (
+            {friendrequestlist.length > 0 ?
+            friendrequestlist.map((item) => (
               <Card color="transparent" shadow={true} className="w-full h-[70px] ">
                 <CardHeader
                   color="transparent"
@@ -62,7 +67,6 @@ const FriendRequest = () => {
                     size="sm"
                     variant="circular"
                     src={item.senderphoto}
-                    alt=" "
                   />
                   <div className="flex w-full flex-col gap-0.5">
                     <div className="flex items-center justify-between">
@@ -72,13 +76,15 @@ const FriendRequest = () => {
                     </div>
                     <Typography color="blue-gray" className='font-medium text-[10px] text-[#000000]/50%'>{item.senderemail.slice(0, 12)}...</Typography>
                   </div>
-                  <Button
-                    onClick={() => handleFriend(item)}
-                    className=' w-28 bg-[#03014C] rounded-[5px] mr-1 capitalize font-normal text-sm'
-                    size="sm">accept</Button>
+                  <div className=' flex items-center gap-2 mr-1 '>
+                    <button onClick={() => handleFriend(item)} className=' bg-[#03014C] px-2 py-1 rounded-md text-white text-sm '>Accept</button>
+                    <button onClick={() => handleDelete(item)} className=' bg-[#03014C] px-2 py-1 rounded-md text-white text-sm '>Delete</button>
+                  </div>
                 </CardHeader>
               </Card>
-            ))}
+            )) :
+            <p>Friend request not found</p>
+            }
           </div>
         </CardBody>
       </Card>

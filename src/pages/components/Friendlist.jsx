@@ -9,7 +9,7 @@ import {
   CardHeader,
 } from "@material-tailwind/react";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { getDatabase, onValue, ref } from 'firebase/database';
+import { getDatabase, onValue, push, ref, remove, set } from 'firebase/database';
 import { useSelector, useDispatch } from 'react-redux';
 
 const Friendlist = () => {
@@ -29,9 +29,34 @@ const Friendlist = () => {
       setFriendlist(array);
     });
   }, []);
+
+  let handleBlock = (item) => {
+    if(data.uid == item.senderid){
+      set(push(ref(db, 'blocklist/')), {
+        blockby: item.sendername,
+        blockbyid: item.senderid,
+        block: item.recivername,
+        blockid: item.reciverid,
+        blockphoto: item.reciverphoto,
+      }).then(() => {
+        remove(ref(db, 'friend/' + item.id))
+      });
+    }else{
+      set(push(ref(db, 'blocklist/')), {
+        blockby: item.recivername,
+        blockbyid: item.reciverid,
+        block: item.sendername,
+        blockid: item.senderid,
+        blockphoto: item.senderphoto,
+      }).then(() => {
+        remove(ref(db, 'friend/' + item.id))
+      });
+    }
+  }
+
   return (
     <div>
-      <Card className="mt-6 w-[345px] h-[450px] ">
+      <Card className="mt-6 w-[345px] h-[450px] border border-gray-300">
         <CardBody>
           <div className='flex justify-between items-center '>
             <Typography variant="h5" color="blue-gray" className="mb-2">
@@ -40,7 +65,8 @@ const Friendlist = () => {
             <BsThreeDotsVertical />
           </div>
           <div className="h-[350px] overflow-y-scroll mt-[20px]">
-            {friendlist.map((item) => (
+            {friendlist.length > 0 ?
+            friendlist.map((item) => (
               <Card color="transparent" shadow={true} className="w-full h-[70px]">
                 <CardHeader
                   color="transparent"
@@ -48,23 +74,29 @@ const Friendlist = () => {
                   shadow={false}
                   className="flex items-center gap-4 pb-4 "
                 >
-                  <Avatar
-                    size="sm"
-                    variant="circular"
-                    src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
-                    alt="tania andrew"
-                  />
+                  {data.uid == item.senderphoto ?
+                    <Avatar
+                      size="sm"
+                      variant="circular"
+                      src={item.reciverphoto}
+                    /> :
+                    <Avatar
+                      size="sm"
+                      variant="circular"
+                      src={item.senderphoto}
+                    />
+                  }
                   <div className="flex w-full flex-col gap-0.5">
                     <div className="flex items-center justify-between">
                       {data.uid == item.senderid ? (
-                      <Typography variant="h5" color="blue-gray" className='font-semibold text-[14px]'>
-                        {item.recivername}
-                      </Typography>
+                        <Typography variant="h5" color="blue-gray" className='font-semibold text-[14px]'>
+                          {item.recivername}
+                        </Typography>
                       ) : (
                         <Typography variant="h5" color="blue-gray" className='font-semibold text-[14px]'>
                           {item.sendername}
                         </Typography>
-                        )}
+                      )}
                     </div>
                     {data.uid == item.senderid ? (
                       <Typography color="blue-gray" className='font-medium text-[10px] text-[#000000]/50%'>
@@ -76,12 +108,12 @@ const Friendlist = () => {
                       </Typography>
                     )}
                   </div>
-                  <Button
-                    className=' w-32 bg-[#03014C] rounded-[5px] mr-2 capitalize font-normal text-sm'
-                    size="sm">Block</Button>
+                  <button onClick={() => handleBlock(item)} className=' bg-[#03014C] px-2 py-1 rounded-md text-white text-sm mr-1 '>Block</button>
                 </CardHeader>
               </Card>
-            ))}
+            )) :
+            <p>Friend not found</p>
+            }
           </div>
         </CardBody>
       </Card>
