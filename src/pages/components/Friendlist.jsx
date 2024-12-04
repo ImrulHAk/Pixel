@@ -74,7 +74,7 @@ const Friendlist = () => {
                   shadow={false}
                   className="flex items-center gap-4 pb-4 "
                 >
-                  {data.uid == item.senderphoto ?
+                  {data.uid == item.senderid ?
                     <Avatar
                       size="sm"
                       variant="circular"
@@ -100,11 +100,11 @@ const Friendlist = () => {
                     </div>
                     {data.uid == item.senderid ? (
                       <Typography color="blue-gray" className='font-medium text-[10px] text-[#000000]/50%'>
-                        {item.reciveremail.slice(0, 12)}...
+                        {item.reciveremail}
                       </Typography>
                     ) : (
                       <Typography color="blue-gray" className='font-medium text-[10px] text-[#000000]/50%'>
-                        {item.senderemail.slice(0, 12)}...
+                        {item.senderemail}
                       </Typography>
                     )}
                   </div>

@@ -86,12 +86,6 @@ const Userlist = () => {
         });
     }
 
-    let handleCancelrequest = (item) => {
-        setCancelrequestlist(item.id)
-        remove(ref(db, 'friendrequest/' + item.id))
-        console.log("clicl", item)
-    }
-
     return (
         <div>
             <Card className="mt-6 w-[345px] h-[450px] border border-gray-300 ">

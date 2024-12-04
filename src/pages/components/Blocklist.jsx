@@ -32,26 +32,16 @@ const Blocklist = () => {
   }, []);
 
   let handleUnblock = (item) => {
+    set(push(ref(db, 'friend/')), {
+      senderid: item.blockbyid,
+      sendername: item.blockby,
+      reciverid: item.blockid,
+      recivername: item.block,
+      reciverphoto: item.blockphoto,
+  }).then(() => {
     remove(ref(db, 'blocklist/' + item.id))
-      .then(() => {
-        const friendsRef = ref(db, 'friend/' + data.uid);
-        push(friendsRef, {
-          friendid: item.blockid,
-          friendname: item.block,
-          friendphoto: item.blockphoto,
-        })
-      })
+  });
   };
-  useEffect(() => {
-    const friendsRef = ref(db, 'friend/' + data.uid);
-    onValue(friendsRef, (snapshot) => {
-      let array = [];
-      snapshot.forEach((item) => {
-        array.push({ ...item.val(), id: item.key});
-      });
-      setFriendlist(array);
-    });
-  }, []);
 
   return (
     <div>
